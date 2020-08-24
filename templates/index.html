@@ -132,7 +132,7 @@
 		// Check is task should be created or updated
 		var activeItem = null
 
-		var list_snapshot = []
+		var previous_list = []
 
 		// Base API url
 		var baseUrl = 'http://127.0.0.1:8000/api/'
@@ -143,7 +143,7 @@
         function buildList()
         {
             var wrapper = document.getElementById('list-wrapper')
-            wrapper.innerHTML = ''
+            //wrapper.innerHTML = ''
 			var url = baseUrl + 'task-list/'
 
 			
@@ -155,9 +155,18 @@
                     console.log('Data:', data)
 
 					var list = data
+
+
 					// Showing the task list html format
                     for(var i in list)
                     {
+						
+						try{
+							document.getElementById(`data-row-${i}`).remove()
+						}catch(err){
+	
+						}
+	
 						var title = `<span class="title">${list[i].title}</span>`
 						if(list[i].completed == true)
 						{
@@ -179,8 +188,16 @@
 					    `
 						wrapper.innerHTML += item
 					}
-					
 
+					if(previous_list.length > list.length)
+					{
+						for(var i = list.length; i < previous_list.length; i++)
+						{
+							document.getElementById(`data-row-${i}`).remove()
+						}
+					}
+					previous_list = list
+					
 					// adding eventListener in with each task
 					for (var i in list){
 						var editBtn = document.getElementsByClassName('edit')[i]
@@ -212,6 +229,7 @@
 					}
                 }
 			)
+			
 			
 			
         }

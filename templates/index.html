@@ -129,6 +129,7 @@
 		}
 		var csrftoken = getCookie('csrftoken');
 
+		var activeItem = null
         buildList()
 
         function buildList()
@@ -161,10 +162,27 @@
                             </div>
 
 					    `
-					wrapper.innerHTML += item
-                    }
+						wrapper.innerHTML += item
+					}
+					
+					for (var i in list){
+						var editBtn = document.getElementsByClassName('edit')[i]
+						var deleteBtn = document.getElementsByClassName('delete')[i]
+						var title = document.getElementsByClassName('title')[i]
+		
+		
+						editBtn.addEventListener('click', (function(item){
+							return function(){
+								editItem(item)
+							}
+						})(list[i]))
+		
+		
+					}
                 }
-            )
+			)
+			
+			
         }
         
 		
@@ -188,7 +206,13 @@
                 buildList()
                 document.getElementById('form').reset()
 			})
-        })
+		})
+		
+		function editItem(item){
+			console.log('Item clicked:', item)
+			activeItem = item
+			document.getElementById('title').value = activeItem.title
+		}
         
         
     </script>

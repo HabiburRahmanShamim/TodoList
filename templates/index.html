@@ -177,6 +177,12 @@
 								editItem(item)
 							}
 						})(list[i]))
+
+						deleteBtn.addEventListener('click', (function(item){
+							return function(){
+								deleteItem(item)
+							}
+						})(list[i]))
 		
 		
 					}
@@ -190,7 +196,7 @@
         var form = document.getElementById('form-wrapper')
 		form.addEventListener('submit', function(e){
 			e.preventDefault()
-			console.log('Form submitted')
+			console.log('Task submitted')
 			var url = 'http://127.0.0.1:8000/api/task-create/'
 			
 			if(activeItem != null)
@@ -215,9 +221,23 @@
 		})
 		
 		function editItem(item){
-			console.log('Item clicked:', item)
+			console.log('Task clicked:', item)
 			activeItem = item
 			document.getElementById('title').value = activeItem.title
+		}
+
+		function deleteItem(item){
+			console.log('Delete task clicked:', item)
+			var url = `http://127.0.0.1:8000/api/task-delete/${item.id}/`
+			fetch(url, {
+				method: 'DELETE',
+				headers:{
+					'Content-type':'application/json',
+					'X-CSRFToken':csrftoken,
+				}
+			}).then(function(response){
+				buildList()
+			})
 		}
         
         

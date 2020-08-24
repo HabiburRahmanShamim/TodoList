@@ -23,6 +23,7 @@ def apiOverview(request):
 
 @api_view(['GET'])
 def taskList(request):
+	# Task list ordered by created time
 	tasks = Task.objects.all().order_by('created_at')
 	serializer = TaskSerializer(tasks, many=True)
 	return Response(serializer.data)

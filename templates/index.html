@@ -95,7 +95,7 @@
         /*
 			KEY COMPONENTS:
 			"activeItem" = null until an edit button is clicked. Will contain object of item we are editing
-			"list_snapshot" = Will contain previous state of list. Used for removing extra rows on list update
+			"previous_list" = Will contain previous state of list. Used for removing extra rows on list update
 			
 			PROCESS:
 			1 - Fetch Data and build rows "buildList()"
@@ -142,6 +142,8 @@
 		// Shows task list
         function buildList()
         {
+
+			// Getting current html state of task list
             var wrapper = document.getElementById('list-wrapper')
             //wrapper.innerHTML = ''
 			var url = baseUrl + 'task-list/'
@@ -157,16 +159,20 @@
 					var list = data
 
 
-					// Showing the task list html format
+					// Showing the task list in html format
+					// We will remove the previous list and add the new list
+					// But to make it like live response we will remove task and add task one by one
                     for(var i in list)
                     {
 						
+						// Removing existing task rows one by one
 						try{
 							document.getElementById(`data-row-${i}`).remove()
 						}catch(err){
 	
 						}
-	
+						
+						// Creating html for task one by one  
 						var title = `<span class="title">${list[i].title}</span>`
 						if(list[i].completed == true)
 						{
@@ -185,10 +191,15 @@
                                 </div>
                             </div>
 
-					    `
+						`
+						// Adding task one by one
 						wrapper.innerHTML += item
 					}
 
+					// But if we delete some tasks then the current list items will be less than the previous list
+					// Thus few items from the bottom of previous list will not be removed 
+					// Those items will appear in the top of the task list
+					// So we have to remove those items from the bottom of the previous list 
 					if(previous_list.length > list.length)
 					{
 						for(var i = list.length; i < previous_list.length; i++)
@@ -198,7 +209,7 @@
 					}
 					previous_list = list
 					
-					// adding eventListener in with each task
+					// adding eventListener with each task
 					for (var i in list){
 						var editBtn = document.getElementsByClassName('edit')[i]
 						var deleteBtn = document.getElementsByClassName('delete')[i]
@@ -206,8 +217,6 @@
 
 						//console.log(title)
 		
-						
-						
 						editBtn.addEventListener('click', (function(item){
 							return function(){
 								editItem(item)
@@ -229,8 +238,6 @@
 					}
                 }
 			)
-			
-			
 			
         }
         
@@ -290,6 +297,8 @@
 			})
 		}
 
+		// Task complete function
+		// If task complete we have to change the task complete field
 		function taskComplete(item){
 			console.log('Complete task', item)
 
@@ -301,7 +310,7 @@
 					'Content-type':'application/json',
 					'X-CSRFToken':csrftoken,
 				},
-				// sending title and task is complete
+				// sending title and task complete value
 				body:JSON.stringify({'title':item.title, 'completed':item.completed})
 			}
 			).then(function(response){

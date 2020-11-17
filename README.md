@@ -19,7 +19,7 @@ This is a simple todo list app build with Django Framework. The main porpose of 
 
 - **[Django Framework 3.1](https://www.djangoproject.com/)**
 - **[Python 3.8.5](https://www.python.org/)** 
-- **[Jquery](https://jquery.com/)** 
+- **[Vanilla JS](http://vanilla-js.com/)** 
 - **[HTML5](https://html.com/)**
 - **[BOOTSTRAP-4.4](https://getbootstrap.com/)**
 
